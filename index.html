@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>树精灵环保问答</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .class-input {
+            margin-bottom: 20px;
+        }
+        .class-input input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .option {
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        .diamond {
+            position: fixed;
+            font-size: 40px;
+            color: gold;
+            pointer-events: none;
+            animation: float 2s ease-out;
+            opacity: 0;
+        }
+        .score-animation {
+            position: fixed;
+            color: #28a745;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float 2s ease-out;
+            opacity: 0;
+        }
+        .congratulation {
+            text-align: center;
+            color: #28a745;
+            font-size: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>树精灵环保问答</h1>
+        <div class="class-input">
+            <input type="text" id="className" placeholder="请输入你的班级">
+        </div>
+        <div id="questions"></div>
+        <div class="congratulation" id="congratulation">
+            恭喜你完成了所有问题！继续保持环保意识，让我们一起守护地球！
+        </div>
+    </div>
+    <script>
+        const questions = [
+            {
+                question: "什么是可再生能源？",
+                options: [
+                    "只能使用一次的能源",
+                    "可以循环使用的自然资源，如太阳能和风能",
+                    "只存在于地下的能源",
+                    "只有政府才能使用的能源"
+                ],
+                correct: 1
+            },
+            {
+                question: "下列哪个行为最环保？",
+                options: [
+                    "使用一次性餐具",
+                    "开着空调睡觉",
+                    "自带购物袋去超市",
+                    "每天都买新衣服"
+                ],
+                correct: 2
+            },
+            {
+                question: "为什么要进行垃圾分类？",
+                options: [
+                    "增加垃圾工人的工作量",
+                    "让垃圾桶更好看",
+                    "方便垃圾处理和资源回收利用",
+                    "没有特别的原因"
+                ],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function showQuestion() {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question active';
+            const question = questions[currentQuestion];
+
+            questionDiv.innerHTML = `
+                <h3>${currentQuestion + 1}. ${question.question}</h3>
+                <div class="options">
+                    ${question.options.map((option, index) => 
+                        `<div class="option" onclick="checkAnswer(${index})">${option}</div>`
+                    ).join('')}
+                </div>
+            `;
+
+            document.getElementById('questions').innerHTML = '';
+            document.getElementById('questions').appendChild(questionDiv);
+        }
+
+        function checkAnswer(selectedIndex) {
+            const question = questions[currentQuestion];
+            if (selectedIndex === question.correct) {
+                score++;
+                showScoreAnimation();
+                showDiamond();
+            }
+
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                document.getElementById('questions').innerHTML = '';
+                document.getElementById('congratulation').style.display = 'block';
+            }
+        }
+
+        function showScoreAnimation() {
+            const animation = document.createElement('div');
+            animation.className = 'score-animation';
+            animation.textContent = '+1';
+            animation.style.left = `${Math.random() * window.innerWidth}px`;
+            animation.style.top = `${Math.random() * window.innerHeight}px`;
+            document.body.appendChild(animation);
+
+            setTimeout(() => {
+                document.body.removeChild(animation);
+            }, 2000);
+        }
+
+        function showDiamond() {
+            const diamond = document.createElement('div');
+            diamond.className = 'diamond';
+            diamond.textContent = '💎';
+            diamond.style.left = `${Math.random() * window.innerWidth}px`;
+            diamond.style.top = `${Math.random() * window.innerHeight}px`;
+            document.body.appendChild(diamond);
+
+            setTimeout(() => {
+                document.body.removeChild(diamond);
+            }, 2000);
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>
