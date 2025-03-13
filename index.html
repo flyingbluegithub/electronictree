@@ -77,11 +77,20 @@
             opacity: 0;
         }
         .congratulation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             color: #28a745;
             font-size: 20px;
-            margin-top: 20px;
+            margin-top: 0;
+            z-index: 1000;
             display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         @keyframes float {
             0% {
@@ -103,55 +112,144 @@
         </div>
         <div id="questions"></div>
         <div class="congratulation" id="congratulation">
-            恭喜你完成了所有问题！继续保持环保意识，让我们一起守护地球！
         </div>
     </div>
     <script>
         const questions = [
             {
-                question: "什么是可再生能源？",
+                question: "课间操时间教室里空无一人，应该怎么做？",
                 options: [
-                    "只能使用一次的能源",
-                    "可以循环使用的自然资源，如太阳能和风能",
-                    "只存在于地下的能源",
-                    "只有政府才能使用的能源"
+                    "让灯继续亮着给桌椅照明",
+                    "用粉笔在黑板上画满太阳来采光",
+                    "把窗帘全部拉开用自然光代替",
+                    "打开所有吊扇给空气做运动"
+                ],
+                correct: 2
+            },
+            {
+                question: "发现最后一个离开教室的人没关投影仪，你会？",
+                options: [
+                    "让投影仪整夜播放保护森林宣传片",
+                    "用校服把投影屏幕盖起来省电",
+                    "立刻关闭电源并报告老师",
+                    "对着镜头跳段舞录成节能教学视频"
+                ],
+                correct: 2
+            },
+            {
+                question: "草稿纸的正确使用方式是？",
+                options: [
+                    "单面写满就丢掉当飞盘玩",
+                    "每页只写5个字保持页面整洁",
+                    "双面使用后再交给折纸社团",
+                    "折成纸船测试水池浮力实验"
+                ],
+                correct: 2
+            },
+            {
+                question: "教室里空调开到多少度最环保？",
+                options: [
+                    "16℃模拟北极科考体验",
+                    "26℃兼顾舒适与节能",
+                    "30℃假装在热带雨林上课",
+                    "不开空调，全班集体扇课本"
                 ],
                 correct: 1
             },
             {
-                question: "下列哪个行为最环保？",
+                question: "看到饮水机漏水应该？",
                 options: [
-                    "使用一次性餐具",
-                    "开着空调睡觉",
-                    "自带购物袋去超市",
-                    "每天都买新衣服"
+                    "接漏水玩「滴水穿石」科学实验",
+                    "立刻关闭阀门并粘贴报修标签",
+                    "用胶带把出水口缠成木乃伊",
+                    "在旁边放个水桶开小型水族馆"
+                ],
+                correct: 1
+            },
+            {
+                question: "午餐后处理喝剩的盒装牛奶？",
+                options: [
+                    "把空盒吹成气球装饰教室",
+                    "冲洗干净后投入可回收箱",
+                    "用吸管在课桌上画抽象画",
+                    "叠成牛奶盒城堡参加建筑大赛"
+                ],
+                correct: 1
+            },
+            {
+                question: "发现卫生间水龙头没关紧？",
+                options: [
+                    "假装没看见等值日生处理",
+                    "立刻拧紧并检查其他龙头",
+                    "把水流调成最小当背景音乐",
+                    "贴张「龙王在此」的警示符"
+                ],
+                correct: 1
+            },
+            {
+                question: "班级大扫除时旧扫把坏了？",
+                options: [
+                    "直接扔进有害垃圾箱",
+                    "拆出竹竿当击剑比赛用具",
+                    "交给后勤部进行维修",
+                    "埋进花坛当植物攀爬支架"
                 ],
                 correct: 2
             },
             {
-                question: "为什么要进行垃圾分类？",
+                question: "冬季教室太热要开窗？",
                 options: [
-                    "增加垃圾工人的工作量",
-                    "让垃圾桶更好看",
-                    "方便垃圾处理和资源回收利用",
-                    "没有特别的原因"
+                    "把所有窗户开到最大模拟暴风雪",
+                    "开对流窗15分钟换气",
+                    "用课本给暖气片扇风降温",
+                    "组织同学玩老鹰捉小鸡取暖"
                 ],
-                correct: 2
+                correct: 1
+            },
+            {
+                question: "发现同学撕作业本折纸飞机？",
+                options: [
+                    "帮他折更多飞机测试空气动力学",
+                    "收集废纸卖给回收站买新本子",
+                    "用粉笔在飞机上画禁飞区标志",
+                    "发起「纸飞机跨教室快递」服务"
+                ],
+                correct: 1
             }
         ];
 
         let currentQuestion = 0;
         let score = 0;
+        let selectedQuestions = [];
+
+        function initializeQuestions() {
+            let indices = Array.from({length: questions.length}, (_, i) => i);
+            selectedQuestions = indices.sort(() => Math.random() - 0.5).slice(0, 2);
+            currentQuestion = 0;
+            score = 0;
+        }
+
+        function getRandomOptions(options, correctIndex) {
+            let indices = Array.from({length: options.length}, (_, i) => i);
+            return indices.sort(() => Math.random() - 0.5).map(index => ({
+                option: options[index],
+                index: index
+            }));
+        }
 
         function showQuestion() {
+            if (selectedQuestions.length === 0) {
+                initializeQuestions();
+            }
             const questionDiv = document.createElement('div');
             questionDiv.className = 'question active';
-            const question = questions[currentQuestion];
+            const question = questions[selectedQuestions[currentQuestion]];
+            const randomOptions = getRandomOptions(question.options, question.correct);
 
             questionDiv.innerHTML = `
                 <h3>${currentQuestion + 1}. ${question.question}</h3>
                 <div class="options">
-                    ${question.options.map((option, index) => 
+                    ${randomOptions.map(({option, index}) => 
                         `<div class="option" onclick="checkAnswer(${index})">${option}</div>`
                     ).join('')}
                 </div>
@@ -162,15 +260,17 @@
         }
 
         function checkAnswer(selectedIndex) {
-            const question = questions[currentQuestion];
+            const question = questions[selectedQuestions[currentQuestion]];
             if (selectedIndex === question.correct) {
                 score++;
                 showScoreAnimation();
                 showDiamond();
+                showCongratulation();
+                showElfTree();
             }
 
             currentQuestion++;
-            if (currentQuestion < questions.length) {
+            if (currentQuestion < selectedQuestions.length) {
                 showQuestion();
             } else {
                 document.getElementById('questions').innerHTML = '';
@@ -182,8 +282,11 @@
             const animation = document.createElement('div');
             animation.className = 'score-animation';
             animation.textContent = '+1';
-            animation.style.left = `${Math.random() * window.innerWidth}px`;
-            animation.style.top = `${Math.random() * window.innerHeight}px`;
+            animation.style.position = 'fixed';
+            animation.style.top = '50%';
+            animation.style.left = '50%';
+            animation.style.transform = 'translate(-50%, -50%)';
+            animation.style.zIndex = '1000';
             document.body.appendChild(animation);
 
             setTimeout(() => {
@@ -195,12 +298,49 @@
             const diamond = document.createElement('div');
             diamond.className = 'diamond';
             diamond.textContent = '💎';
-            diamond.style.left = `${Math.random() * window.innerWidth}px`;
-            diamond.style.top = `${Math.random() * window.innerHeight}px`;
+            diamond.style.position = 'fixed';
+            diamond.style.top = '50%';
+            diamond.style.left = '50%';
+            diamond.style.transform = 'translate(-50%, -50%)';
+            diamond.style.zIndex = '1000';
             document.body.appendChild(diamond);
 
             setTimeout(() => {
                 document.body.removeChild(diamond);
+            }, 2000);
+        }
+
+        function showCongratulation() {
+            const congrat = document.createElement('div');
+            congrat.style.position = 'fixed';
+            congrat.style.top = '50%';
+            congrat.style.left = '50%';
+            congrat.style.transform = 'translate(-50%, -50%)';
+            congrat.style.color = '#28a745';
+            congrat.style.fontSize = '24px';
+            congrat.style.fontWeight = 'bold';
+            congrat.style.textAlign = 'center';
+            congrat.style.zIndex = '1000';
+            congrat.textContent = '恭喜！你为你的班级成功加了两枚精灵宝钻！';
+            document.body.appendChild(congrat);
+
+            setTimeout(() => {
+                document.body.removeChild(congrat);
+            }, 2000);
+        }
+
+        function showElfTree() {
+            const tree = document.createElement('div');
+            tree.style.position = 'fixed';
+            tree.style.bottom = '20px';
+            tree.style.right = '20px';
+            tree.style.fontSize = '100px';
+            tree.style.animation = 'float 2s ease-out';
+            tree.textContent = '🌳';
+            document.body.appendChild(tree);
+
+            setTimeout(() => {
+                document.body.removeChild(tree);
             }, 2000);
         }
 
